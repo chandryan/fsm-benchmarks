@@ -1,0 +1,6 @@
+[submodule "msm-ng"]
+	path = msm-ng
+	url = https://github.com/chandryan/msm-ng.git
+[submodule "sml"]
+	path = sml
+	url = https://github.com/boost-ext/sml.git
