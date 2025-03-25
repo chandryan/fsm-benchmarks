@@ -74,49 +74,24 @@ struct guard {
 template <size_t Offset = 0, typename SubFsm = void>
 struct fsm_;
 
-// template <size_t Offset, typename SubFsm>
-// struct fsm_ {
-//   auto operator()() const {
-//     using namespace boost::sml;
+template <size_t Offset, typename SubFsm>
+struct fsm_ {
+  using sub_fsm = SubFsm;
 
-//     return make_transition_table(
-// #define X(N)                                                                \
-//   COMMA_IF_NOT_0(N)                                                         \
-//   state<state_tpl<N + Offset>> +                                            \
-//       event<state_transition_event<N + Offset>>[guard<N>{}] /               \
-//           state_transition_action<N>{} =                                    \
-//       state<state_tpl<(N + 1) % PROBLEM_SIZE + Offset>>,                    \
-//           state<state_tpl<N + Offset>> + event<internal_transition_event> / \
-//                                              internal_transition_action<N>{}
-//         *COUNTER
-// #undef X
-
-// #define X(N)                       \
-//   , state<state_tpl<N + Offset>> + \
-//         boost::sml::on_exit<_> / exit_action<N + Offset> {}
-//             COUNTER
-// #undef X
-//         ,
-//         state<state_tpl<Offset>> + event<enter_sub_fsm_event> =
-//         state<SubFsm>, state<SubFsm> + event<exit_sub_fsm_event> =
-//         state<state_tpl<Offset>>);
-//   }
-// };
-
-template <size_t Offset>
-struct fsm_<Offset, void> {
   auto operator()() const {
     using namespace boost::sml;
 
     return make_transition_table(
-#define X(N)                                                                \
-  COMMA_IF_NOT_0(N)                                                         \
-  state<state_tpl<N + Offset>> +                                            \
-      event<state_transition_event<N + Offset>>[guard<N>{}] /               \
-          state_transition_action<N>{} =                                    \
-      state<state_tpl<(N + 1) % PROBLEM_SIZE + Offset>>,                    \
-          state<state_tpl<N + Offset>> + event<internal_transition_event> / \
-                                             internal_transition_action<N>{}
+#define X(N)                                                                 \
+  COMMA_IF_NOT_0(N)                                                          \
+  state<state_tpl<N + Offset>> +                                             \
+      event<state_transition_event<N + Offset>>[guard<N + Offset>{}] /       \
+          state_transition_action<N + Offset>{} =                            \
+      state<state_tpl<(N + 1) % PROBLEM_SIZE + Offset>>,                     \
+                                      state<state_tpl<N + Offset>> +         \
+                                          event<internal_transition_event> / \
+                                              internal_transition_action<    \
+                                                  N + Offset>{}
         *COUNTER
 #undef X
 
@@ -125,19 +100,54 @@ struct fsm_<Offset, void> {
         boost::sml::on_exit<_> / exit_action<N + Offset> {}
             COUNTER
 #undef X
+        ,
+        state<state_tpl<Offset>> + event<enter_sub_fsm_event> = state<SubFsm>,
+        state<SubFsm> + event<exit_sub_fsm_event> = state<state_tpl<Offset>>);
+  }
+
+  static constexpr size_t offset = Offset;
+};
+
+template <size_t Offset>
+struct fsm_<Offset, void> {
+  auto operator()() const {
+    using namespace boost::sml;
+
+    return make_transition_table(
+#define X(N)                                                                 \
+  COMMA_IF_NOT_0(N)                                                          \
+  state<state_tpl<N + Offset>> +                                             \
+      event<state_transition_event<N + Offset>>[guard<N + Offset>{}] /       \
+          state_transition_action<N + Offset>{} =                            \
+      state<state_tpl<(N + 1) % PROBLEM_SIZE + Offset>>,                     \
+                                      state<state_tpl<N + Offset>> +         \
+                                          event<internal_transition_event> / \
+                                              internal_transition_action<    \
+                                                  N + Offset>{}
+        *COUNTER
+#undef X
+
+        // #define X(N)                       \
+//   , state<state_tpl<N + Offset>> + \
+//         boost::sml::on_exit<_> / exit_action<N + Offset> {}
+        //             COUNTER
+        // #undef X
     );
   }
+
+  static constexpr size_t offset = Offset;
 };
 
 template <typename Fsm>
 int run_fsm() {
+  using fsm = boost::sml::sm<Fsm, boost::sml::process_queue<std::queue>>;
   auto ctx = context{};
-  auto first_sm = Fsm{ctx};
-  auto& second_sm = first_sm.template get_state<typename Fsm::sub_fsm&>();
-  auto& third_sm =
-      second_sm.template get_state<typename Fsm::sub_fsm::sub_fsm&>();
+  auto first_sm = fsm{ctx};
+  //   auto& second_sm = first_sm.template get_state<typename Fsm::sub_fsm&>();
+  //   auto& third_sm =
+  //       second_sm.template get_state<typename Fsm::sub_fsm::sub_fsm&>();
 
-  first_sm.start();
+  //   first_sm.start();
 
   // First FSM
   for (auto i = 0; i < test_loop_size; ++i) {
@@ -165,7 +175,8 @@ int run_fsm() {
 #undef X
   }
 
-  auto sum = first_sm.counter + second_sm.counter + third_sm.counter;
+  //   auto sum = first_sm.counter + second_sm.counter + third_sm.counter;
+  auto sum = ctx.counter;
 
   first_sm.process_event(exit_sub_fsm_event{});
   first_sm.process_event(exit_sub_fsm_event{});
@@ -192,13 +203,12 @@ void test_fsm() {
   assert(counter == expected_counter);
 }
 
-using fsm2 = boost::sml::sm<fsm_<1>, boost::sml::process_queue<std::queue>>;
+using fsm2 = fsm_<PROBLEM_SIZE / 2>;
+using fsm1 = fsm_<PROBLEM_SIZE / 3, fsm2>;
+using fsm0 = fsm_<0, fsm1>;
 
 int main() {
-  // test_fsm<fsm2>();
-
-  auto ctx = context{};
-  fsm2 machine{ctx};
+  test_fsm<fsm0>();
 
   return 0;
 }

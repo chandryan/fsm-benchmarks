@@ -155,8 +155,8 @@ struct fsm_: public msm::front::state_machine_def<fsm_<Offset, SubFsm>>
     using transition_table = TRANSITION_TABLE_TYPE
     <
 #define X(N) \
-        COMMA_IF_NOT_0(N) Row<state_tpl<N+Offset>, state_transition_event<N+Offset>, state_tpl<(N + 1) % PROBLEM_SIZE+Offset>, state_transition_action<N>, guard<N>> \
-        , Row<state_tpl<N+Offset>, internal_transition_event, none, internal_transition_action<N>>
+        COMMA_IF_NOT_0(N) Row<state_tpl<N+Offset>, state_transition_event<N+Offset>, state_tpl<(N + 1) % PROBLEM_SIZE+Offset>, state_transition_action<N + Offset>, guard<N + Offset>> \
+        , Row<state_tpl<N+Offset>, internal_transition_event, none, internal_transition_action<N + Offset>>
         COUNTER
 #undef X
     , Row<state_tpl<Offset>, enter_sub_fsm_event, sub_fsm, none, none>
@@ -175,8 +175,8 @@ struct fsm_<Offset, void>: public msm::front::state_machine_def<fsm_<Offset, voi
     using transition_table = TRANSITION_TABLE_TYPE
     <
 #define X(N) \
-        COMMA_IF_NOT_0(N) Row<state_tpl<N+Offset>, state_transition_event<N+Offset>, state_tpl<(N + 1) % PROBLEM_SIZE+Offset>, state_transition_action<N>, guard<N>> \
-        , Row<state_tpl<N+Offset>, internal_transition_event, none, internal_transition_action<N>>
+        COMMA_IF_NOT_0(N) Row<state_tpl<N+Offset>, state_transition_event<N+Offset>, state_tpl<(N + 1) % PROBLEM_SIZE+Offset>, state_transition_action<N + Offset>, guard<N + Offset>> \
+        , Row<state_tpl<N+Offset>, internal_transition_event, none, internal_transition_action<N + Offset>>
         COUNTER
 #undef X
     >;

@@ -4,8 +4,8 @@
 // https://www.boost.org/LICENSE_1_0.txt)
 // Official repository: https://github.com/fgoujeon/fsm-benchmark
 
-#define PROBLEM_SIZE 5
-#define PROBLEM_SIZE_X_2 10
+#define PROBLEM_SIZE 25
+#define PROBLEM_SIZE_X_2 50
 
 #define COUNTER \
   X(0)          \
@@ -13,26 +13,26 @@
   X(2)          \
   X(3)          \
   X(4)          \
-  //   X(5)          \
-//   X(6)          \
-//   X(7)          \
-//   X(8)          \
-//   X(9)          \
-  //   X(10)         \
-//   X(11)         \
-//   X(12)         \
-//   X(13)         \
-//   X(14)         \
-//   X(15)         \
-//   X(16)         \
-//   X(17)         \
-//   X(18)         \
-//   X(19)         \
-//   X(20)         \
-//   X(21)         \
-//   X(22)         \
-//   X(23)         \
-//   X(24)
+  X(5)          \
+  X(6)          \
+  X(7)          \
+  X(8)          \
+  X(9)          \
+  X(10)         \
+  X(11)         \
+  X(12)         \
+  X(13)         \
+  X(14)         \
+  X(15)         \
+  X(16)         \
+  X(17)         \
+  X(18)         \
+  X(19)         \
+  X(20)         \
+  X(21)         \
+  X(22)         \
+  X(23)         \
+  X(24)
 
 #define COMMA_0
 #define COMMA_1 ,
