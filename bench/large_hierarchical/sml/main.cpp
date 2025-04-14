@@ -113,26 +113,29 @@ struct fsm_<Offset, void> {
   auto operator()() const {
     using namespace boost::sml;
 
+    // clang-format off
     return make_transition_table(
 #define X(N)                                                                 \
   COMMA_IF_NOT_0(N)                                                          \
   state<state_tpl<N + Offset>> +                                             \
-      event<state_transition_event<N + Offset>>[guard<N + Offset>{}] /       \
-          state_transition_action<N + Offset>{} =                            \
-      state<state_tpl<(N + 1) % PROBLEM_SIZE + Offset>>,                     \
-                                      state<state_tpl<N + Offset>> +         \
-                                          event<internal_transition_event> / \
-                                              internal_transition_action<    \
-                                                  N + Offset>{}
-        *COUNTER
+    event<state_transition_event<N + Offset>>[guard<N + Offset>{}] /         \
+    state_transition_action<N + Offset>{} =                                  \
+    state<state_tpl<(N + 1) % PROBLEM_SIZE + Offset>>,                       \
+  state<state_tpl<N + Offset>> +                                             \
+    event<internal_transition_event> /                                       \
+    internal_transition_action<N + Offset>{}
+  *COUNTER
 #undef X
 
-        // #define X(N)                       \
-//   , state<state_tpl<N + Offset>> + \
-//         boost::sml::on_exit<_> / exit_action<N + Offset> {}
-        //             COUNTER
-        // #undef X
+
+#define X(N)                       \
+  , state<state_tpl<N + Offset>> + \
+        boost::sml::on_exit<_> / exit_action<N + Offset> {}
+    COUNTER
+#undef X
     );
+
+    // clang-format on
   }
 
   static constexpr size_t offset = Offset;
@@ -143,11 +146,7 @@ int run_fsm() {
   using fsm = boost::sml::sm<Fsm, boost::sml::process_queue<std::queue>>;
   auto ctx = context{};
   auto first_sm = fsm{ctx};
-  //   auto& second_sm = first_sm.template get_state<typename Fsm::sub_fsm&>();
-  //   auto& third_sm =
-  //       second_sm.template get_state<typename Fsm::sub_fsm::sub_fsm&>();
-
-  //   first_sm.start();
+  int counter = 0;
 
   // First FSM
   for (auto i = 0; i < test_loop_size; ++i) {
@@ -155,6 +154,9 @@ int run_fsm() {
     COUNTER
 #undef X
   }
+
+  counter += ctx.counter;
+  ctx.counter = 0;
 
   // Second FSM
   first_sm.process_event(enter_sub_fsm_event{});
@@ -164,6 +166,9 @@ int run_fsm() {
     COUNTER
 #undef X
   }
+
+  counter += ctx.counter;
+  ctx.counter = 0;
 
   // Third FSM
   first_sm.process_event(enter_sub_fsm_event{});
@@ -175,13 +180,13 @@ int run_fsm() {
 #undef X
   }
 
-  //   auto sum = first_sm.counter + second_sm.counter + third_sm.counter;
-  auto sum = ctx.counter;
+  counter += ctx.counter;
+  ctx.counter = 0;
 
   first_sm.process_event(exit_sub_fsm_event{});
   first_sm.process_event(exit_sub_fsm_event{});
 
-  return sum;
+  return counter;
 }
 
 template <typename Fsm>
