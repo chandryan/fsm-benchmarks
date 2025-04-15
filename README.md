@@ -65,7 +65,7 @@ Following results are from a benchmark run from *2025-04-15* with the following 
 | back11                      | 42            | 2916     | 7              |
 | backmp11                    | 7             | 469      | 3              |
 | backmp11_favor_compile_time | 6             | 419      | 13             |
-
+| sml                         | 11            | 362      | 3              |
 
 ### Large hierarchical state machine
 
