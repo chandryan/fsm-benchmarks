@@ -5,7 +5,7 @@
 #include <boost/msm/backmp11/favor_compile_time.hpp>
 #include <boost/msm/backmp11/state_machine.hpp>
 
-using fsm0 = msm::back::state_machine<fsm_, msm::back::favor_compile_time>;
+using fsm0 = msm::backmp11::state_machine<fsm_, msm::backmp11::favor_compile_time>;
 
 int main() {
   test_fsm<fsm0>();
