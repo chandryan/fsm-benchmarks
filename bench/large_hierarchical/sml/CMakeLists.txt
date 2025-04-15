@@ -1,0 +1,2 @@
+add_executable(large_hierarchical_sml main.cpp)
+add_test(large_hierarchical_sml large_hierarchical_sml)

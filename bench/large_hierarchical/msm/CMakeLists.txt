@@ -1,0 +1,25 @@
+add_executable(large_hierarchical_msm_back Back.cpp)
+add_test(large_hierarchical_msm_back large_hierarchical_msm_back)
+
+add_executable(large_hierarchical_msm_back_favor_compile_time BackFavorCompileTime.cpp)
+add_test(large_hierarchical_msm_back_favor_compile_time large_hierarchical_msm_back_favor_compile_time)
+
+add_executable(large_hierarchical_msm_backmp11 Backmp11.cpp)
+add_test(large_hierarchical_msm_backmp11 bench_backmp11_nested_fsm)
+
+add_executable(large_hierarchical_msm_backmp11_favor_compile_time Backmp11FavorCompileTime.cpp)
+add_test(large_hierarchical_msm_backmp11_favor_compile_time large_hierarchical_msm_backmp11_favor_compile_time)
+
+add_executable(large_hierarchical_msm_backmp11_favor_compile_time_multi_cu
+    backmp11_nested_fsm_multi_cu/fsm0.cpp
+    backmp11_nested_fsm_multi_cu/fsm1.cpp
+    backmp11_nested_fsm_multi_cu/fsm2.cpp
+    backmp11_nested_fsm_multi_cu/test.cpp
+    )
+add_test(large_hierarchical_msm_backmp11_favor_compile_time_multi_cu large_hierarchical_msm_backmp11_favor_compile_time_multi_cu)
+
+add_custom_target(benchmarks_large_hierarchical_backmp11)
+add_dependencies(benchmarks_large_hierarchical_backmp11
+large_hierarchical_msm_backmp11
+    large_hierarchical_msm_backmp11_favor_compile_time
+)
