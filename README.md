@@ -33,7 +33,7 @@ The following libraries are benchmarked:
 **MSM:**
 
 MSM is used from a [fork](https://github.com/chandryan/msm-ng) with a C++11-optimized backend called `backmp11`).
-For more details about the applied optimizations take a look at the [backend's README](msm-ng/include/boost/msm/backmp11/README.md).
+For more details about the applied optimizations take a look at the [backend's README](https://github.com/chandryan/msm-ng/tree/develop/include/boost/msm/backmp11#readme).
 
 Only the functor frontend is used in the benchmarks. The following backend configurations are tested:
   - `back` backend with `favor_runtime_speed` and `favor_compile_time` policy
