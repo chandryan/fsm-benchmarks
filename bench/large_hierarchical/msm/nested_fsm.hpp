@@ -64,11 +64,6 @@
 
 constexpr auto test_loop_size = 1000;
 
-#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#define BOOST_MPL_LIMIT_VECTOR_SIZE PROBLEM_SIZE_X_2
-#define BOOST_MPL_LIMIT_MAP_SIZE PROBLEM_SIZE_X_2
-#define BOOST_MPL_LIMIT_SET_SIZE PROBLEM_SIZE_X_2
-
 #include <boost/msm/front/state_machine_def.hpp>
 #include <boost/msm/front/functor_row.hpp>
 #include <iostream>

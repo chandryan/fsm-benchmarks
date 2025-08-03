@@ -62,18 +62,18 @@ Following results are from a benchmark run from *2025-04-15* with the following 
 |-----------------------------|---------------|----------|----------------|
 | back                        | 17            | 954      | 7              |
 | back_favor_compile_time     | 21            | 1000     | 7              |
-| back11                      | 42            | 2916     | 7              |
-| backmp11                    | 7             | 469      | 3              |
-| backmp11_favor_compile_time | 6             | 419      | 13             |
+| back11                      | 39            | 2794     | 7              |
+| backmp11                    | 5             | 332      | 3              |
+| backmp11_favor_compile_time | 4             | 282      | 13             |
 | sml                         | 11            | 362      | 3              |
 
 ### Large hierarchical state machine
 
 |                                      | Compile / sec | RAM / MB | Runtime / sec  |
 |--------------------------------------|---------------|----------|----------------|
-| back                                 | 67            | 3023     | 23             |
-| back_favor_compile_time              | 76            | 2674     | 280            |
-| backmp11                             | 16            | 766      | 10             |
-| backmp11_favor_compile_time          | 10            | 543      | 43             |
-| backmp11_favor_comiple_time_multi_cu | 8             | ~1783    | 43             |
+| back                                 | 62            | 2849     | 22             |
+| back_favor_compile_time              | 74            | 2552     | 267            |
+| backmp11                             | 15            | 627      | 10             |
+| backmp11_favor_compile_time          | 8             | 405      | 42             |
+| backmp11_favor_compile_time_multi_cu | 6             | ~1237    | 42             |
 | sml                                  | 43            | 1121     | 11             |

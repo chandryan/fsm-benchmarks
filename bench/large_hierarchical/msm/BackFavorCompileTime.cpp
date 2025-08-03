@@ -1,3 +1,5 @@
+// Tables are too large for mpl.
+// #define TRANSITION_TABLE_TYPE mpl::vector
 #define TRANSITION_TABLE_TYPE boost::mp11::mp_list
 #include <boost/mp11.hpp>
 #include <boost/mp11/mpl.hpp>
