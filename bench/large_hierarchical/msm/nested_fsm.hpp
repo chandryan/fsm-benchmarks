@@ -66,7 +66,7 @@ constexpr auto test_loop_size = 1000;
 
 #include <boost/msm/front/state_machine_def.hpp>
 #include <boost/msm/front/functor_row.hpp>
-#include <iostream>
+// #include <iostream>
 
 namespace msm = boost::msm;
 namespace mpl = boost::mpl;
@@ -233,8 +233,8 @@ void test_fsm()
 
     constexpr auto expected_counter = test_loop_size * main_loop_size * PROBLEM_SIZE * 3;
 
-    std::cout << counter << std::endl;
-    std::cout << expected_counter << std::endl;
+    // std::cout << counter << std::endl;
+    // std::cout << expected_counter << std::endl;
 
     assert(counter == expected_counter);
 }

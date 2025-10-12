@@ -6,7 +6,7 @@
 
 #include <boost/sml.hpp>
 #include <cassert>
-#include <iostream>
+// #include <iostream>
 #include <queue>
 #include "common.hpp"
 
@@ -202,8 +202,8 @@ void test_fsm() {
   constexpr auto expected_counter =
       test_loop_size * main_loop_size * PROBLEM_SIZE * 3;
 
-  std::cout << counter << std::endl;
-  std::cout << expected_counter << std::endl;
+//   std::cout << counter << std::endl;
+//   std::cout << expected_counter << std::endl;
 
   assert(counter == expected_counter);
 }

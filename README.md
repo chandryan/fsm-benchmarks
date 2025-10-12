@@ -32,18 +32,21 @@ The following libraries are benchmarked:
 
 **MSM:**
 
-MSM is used from a [fork](https://github.com/chandryan/msm-ng) with a C++11-optimized backend called `backmp11`).
-For more details about the applied optimizations take a look at the [backend's README](https://github.com/chandryan/msm-ng/tree/develop/include/boost/msm/backmp11#readme).
+MSM is used with 3 back-ends `back`, `back11` and `backmp11`.
+The back-end `backmp11` is a recent addition. For more details about the applied optimizations and changes to previous back-ends take a look at the [backmp11's README](https://github.com/boostorg/msm/blob/develop/include/boost/msm/backmp11/README.md).
 
 Only the functor frontend is used in the benchmarks. The following backend configurations are tested:
-  - `back` backend with `favor_runtime_speed` and `favor_compile_time` policy
+  - `back` backend with `favor_runtime_speed` and `favor_compile_time` compile policies
   - `back11` backend
-  - `backmp11` backend with `favor_runtime_speed` and `favor_compile_time` policy
+  - `backmp11` backend with `favor_runtime_speed` and `favor_compile_time` compile policies
+
+Last run was done on commit 2ee250630064fead9019d70c9b1bd0489cecc172.
 
 **SML:**
 
 [SML](https://github.com/boost-ext/sml) is tested with a default configuration.
 
+Last run was done on commit 0bdc4f593a3a1cc5bb45e0464c0923683d099d86.
 
 ## Benchmark results
 
@@ -60,20 +63,20 @@ Following results are from a benchmark run from *2025-04-15* with the following 
 
 |                             | Compile / sec | RAM / MB | Runtime / sec  |
 |-----------------------------|---------------|----------|----------------|
-| back                        | 17            | 954      | 7              |
-| back_favor_compile_time     | 21            | 1000     | 7              |
-| back11                      | 39            | 2794     | 7              |
-| backmp11                    | 5             | 332      | 3              |
-| backmp11_favor_compile_time | 4             | 282      | 13             |
-| sml                         | 11            | 362      | 3              |
+| back                        | 18            | 953      | 7              |
+| back_favor_compile_time     | 21            | 1000     | 8              |
+| back11                      | 43            | 2794     | 7              |
+| backmp11                    | 5             | 285      | 3              |
+| backmp11_favor_compile_time | 4             | 239      | 13             |
+| sml                         | 12            | 363      | 3              |
 
 ### Large hierarchical state machine
 
 |                                      | Compile / sec | RAM / MB | Runtime / sec  |
 |--------------------------------------|---------------|----------|----------------|
-| back                                 | 62            | 2849     | 22             |
-| back_favor_compile_time              | 74            | 2552     | 267            |
-| backmp11                             | 15            | 627      | 10             |
-| backmp11_favor_compile_time          | 8             | 405      | 42             |
-| backmp11_favor_compile_time_multi_cu | 6             | ~1237    | 42             |
-| sml                                  | 43            | 1121     | 11             |
+| back                                 | 68            | 2849     | 23             |
+| back_favor_compile_time              | 80            | 2551     | 261            |
+| backmp11                             | 14            | 552      | 10             |
+| backmp11_favor_compile_time          | 8             | 341      | 40             |
+| backmp11_favor_compile_time_multi_cu | 6             | ~1032    | 40             |
+| sml                                  | 48            | 1128     | 11             |
