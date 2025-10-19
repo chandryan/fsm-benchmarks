@@ -17,5 +17,3 @@ int main() {
 
   return 0;
 }
-
-BOOST_MSM_BACKMP11_GENERATE_DISPATCH_TABLE(fsm0);
