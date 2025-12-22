@@ -45,14 +45,14 @@ Only the functor frontend is used in the benchmarks. The following backend confi
 * `back11` backend
 * `backmp11` backend with `favor_runtime_speed` and `favor_compile_time` compile policies
 
-Last run was done on commit 158beca9aa0a08f83e005e536fd9bae21637d51b.
+Last run was done on commit 155b3ef6d66641008ee5ed01cd9ed4ac082e00fe.
 
 
 *SML:*
 
 https://github.com/boost-ext/sml[SML] is tested with a default configuration.
 
-Last run was done on commit 0bdc4f593a3a1cc5bb45e0464c0923683d099d86.
+Last run was done on commit 2e228bbe440cd8a654186a2caeb3f27e0b4ecee6.
 
 
 == Benchmark results
@@ -74,9 +74,9 @@ Following results are from a benchmark run from *2025-11-22* with the following 
 | back                        | 2.3           | 223
 | back_favor_compile_time     | 2.3           | 223
 | back11                      | 2.3           | 223
-| backmp11                    | 0.9           | 148
-| backmp11_favor_compile_time | 1.2           | 152
-| sml                         | 0.1           | 94
+| backmp11                    | 0.9           | 149
+| backmp11_favor_compile_time | 0.9           | 153
+| sml                         | 0.1           | 95
 |=======================================================
 
 
@@ -88,9 +88,9 @@ Following results are from a benchmark run from *2025-11-22* with the following 
 | back                        | 18            | 953      | 7
 | back_favor_compile_time     | 21            | 1000     | 8
 | back11                      | 43            | 2794     | 7
-| backmp11                    | 3             | 239      | 3
-| backmp11_favor_compile_time | 3             | 220      | 13
-| sml                         | 12            | 363      | 3
+| backmp11                    | 3             | 230      | 3
+| backmp11_favor_compile_time | 3             | 221      | 8
+| sml                         | 11            | 362      | 3
 |=======================================================================
 
 
@@ -101,8 +101,8 @@ Following results are from a benchmark run from *2025-11-22* with the following 
 |                                      | Compile / sec | RAM / MB | Runtime / sec
 | back                                 | 68            | 2849     | 23
 | back_favor_compile_time              | 80            | 2551     | 261
-| backmp11                             | 11            | 472      | 10
-| backmp11_favor_compile_time          | 6             | 288      | 40
-| backmp11_favor_compile_time_multi_cu | 5             | ~925     | 40
-| sml                                  | 48            | 1128     | 11
+| backmp11                             | 10            | 438      | 11
+| backmp11_favor_compile_time          | 6             | 288      | 26
+| backmp11_favor_compile_time_multi_cu | 5             | ~920     | 26
+| sml                                  | 40            | 1056     | 11
 |================================================================================
