@@ -45,7 +45,7 @@ Only the functor frontend is used in the benchmarks. The following backend confi
 * `back11` backend
 * `backmp11` backend with `favor_runtime_speed` and `favor_compile_time` compile policies
 
-Last run was done on commit 155b3ef6d66641008ee5ed01cd9ed4ac082e00fe.
+Last run was done on commit 128228e6677105796244c78acacf32365e1b9798.
 
 
 *SML:*
@@ -74,8 +74,8 @@ Following results are from a benchmark run from *2025-11-22* with the following 
 | back                        | 2.3           | 223
 | back_favor_compile_time     | 2.3           | 223
 | back11                      | 2.3           | 223
-| backmp11                    | 0.9           | 149
-| backmp11_favor_compile_time | 0.9           | 153
+| backmp11                    | 0.8           | 137
+| backmp11_favor_compile_time | 0.8           | 142
 | sml                         | 0.1           | 95
 |=======================================================
 
@@ -88,8 +88,8 @@ Following results are from a benchmark run from *2025-11-22* with the following 
 | back                        | 18            | 953      | 7
 | back_favor_compile_time     | 21            | 1000     | 8
 | back11                      | 43            | 2794     | 7
-| backmp11                    | 3             | 230      | 3
-| backmp11_favor_compile_time | 3             | 221      | 8
+| backmp11                    | 3             | 213      | 3
+| backmp11_favor_compile_time | 3             | 204      | 8
 | sml                         | 11            | 362      | 3
 |=======================================================================
 
@@ -101,8 +101,8 @@ Following results are from a benchmark run from *2025-11-22* with the following 
 |                                      | Compile / sec | RAM / MB | Runtime / sec
 | back                                 | 68            | 2849     | 23
 | back_favor_compile_time              | 80            | 2551     | 261
-| backmp11                             | 10            | 438      | 11
-| backmp11_favor_compile_time          | 6             | 288      | 26
-| backmp11_favor_compile_time_multi_cu | 5             | ~920     | 26
+| backmp11                             | 9             | 381      | 11
+| backmp11_favor_compile_time          | 7             | 285      | 26
+| backmp11_favor_compile_time_multi_cu | 5             | ~915     | 26
 | sml                                  | 40            | 1056     | 11
 |================================================================================
