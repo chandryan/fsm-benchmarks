@@ -45,7 +45,7 @@ Only the functor frontend is used in the benchmarks. The following backend confi
 * `back11` backend
 * `backmp11` backend with `favor_runtime_speed` and `favor_compile_time` compile policies
 
-Last run was done on commit d4994c7350d836b9b2de7b46c9c6ce33571a0680.
+Last run was done on commit f2fb8142810db1ba1fb57d7c4b055b020bbc7586.
 
 
 *SML:*
@@ -74,8 +74,8 @@ Following results are from a benchmark run from *2025-11-22* with the following 
 | back                        | 2.3           | 223
 | back_favor_compile_time     | 2.3           | 223
 | back11                      | 2.3           | 223
-| backmp11                    | 0.8           | 137
-| backmp11_favor_compile_time | 0.8           | 142
+| backmp11                    | 0.6           | 125
+| backmp11_favor_compile_time | 0.7           | 131
 | sml                         | 0.1           | 95
 |=======================================================
 
@@ -101,8 +101,8 @@ Following results are from a benchmark run from *2025-11-22* with the following 
 |                                      | Compile / sec | RAM / MB | Runtime / sec
 | back                                 | 68            | 2849     | 23
 | back_favor_compile_time              | 80            | 2551     | 261
-| backmp11                             | 8             | 357      | 11
-| backmp11_favor_compile_time          | 6             | 274      | 26
+| backmp11                             | 8             | 350      | 11
+| backmp11_favor_compile_time          | 6             | 265      | 26
 | backmp11_favor_compile_time_multi_cu | 5             | ~915     | 26
 | sml                                  | 40            | 1056     | 11
 |================================================================================

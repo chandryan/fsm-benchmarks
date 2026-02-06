@@ -15,7 +15,7 @@ endfunction()
 enable_testing()
 set(CMAKE_CXX_COMPILER_LAUNCHER time -f "%e seconds, %M kB RAM")
 
-include_directories(msm-ng/include)
+include_directories(msm/include)
 # include_directories(../boost/libs/msm/include)
 include_directories(sml/include)
 
