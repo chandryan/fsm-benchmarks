@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 # add_compile_options("-ftime-trace")
 # add_compile_options("-save-temps")
 
+# Force DWARF-4 for perf compatibility
+# add_compile_options(-gdwarf-4 -fno-omit-frame-pointer)
+
 function(add_benchmark_executable name)
     add_executable(${name} ${ARGN})
     add_custom_command(TARGET ${name} POST_BUILD
