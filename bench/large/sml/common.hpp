@@ -77,12 +77,6 @@ int main()
         counter += test();
     }
 
-    constexpr auto expected_counter = test_loop_size * main_loop_size * PROBLEM_SIZE;
-
-    if(counter != expected_counter)
-    {
-        return 1;
-    }
-
-    return 0;
+    bool success = (counter == 55000000);
+    return(success ? 0 : 1);
 }

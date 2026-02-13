@@ -13,9 +13,7 @@ using fsm0 = msm::back::state_machine<fsm_<0, fsm1>, msm::back::favor_compile_ti
 
 int main()
 {
-    test_fsm<fsm0>();
-
-    return 0;
+    return test_fsm<fsm0>();
 }
 
 BOOST_MSM_BACK_GENERATE_PROCESS_EVENT(fsm2);

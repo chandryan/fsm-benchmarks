@@ -7,7 +7,5 @@ using fsm0 = msm::backmp11::state_machine<fsm_>;
 
 int main()
 {
-    test_fsm<fsm0>();
-
-    return 0;
+    return test_fsm<fsm0>();
 }

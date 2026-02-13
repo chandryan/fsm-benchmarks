@@ -9,7 +9,9 @@
 #include "common.hpp"
 
 struct context {
-  int counter = 0;
+  int transition_counter = 0;
+  int internal_transition_counter = 0;
+  int enqueued_internal_transition_counter = 0;
 };
 
 template <int Index>
@@ -21,6 +23,7 @@ struct state_transition_event {
 };
 
 struct internal_transition_event {
+  bool enqueued = false;
   int two = 2;
 };
 
@@ -28,8 +31,14 @@ struct internal_transition_event {
 // GCC)
 template <int Index>
 struct state_transition_action {
-  void operator()(const state_transition_event<Index>& evt, context& ctx) {
-    ctx.counter = (ctx.counter + 1) * evt.two;
+  void operator()(const state_transition_event<Index>& evt, 
+                  boost::sml::back::process<internal_transition_event> process,
+                  context& ctx) {
+    ctx.transition_counter += evt.two / 2;
+    if constexpr ((Index % 5) == 0)
+    {
+        process(internal_transition_event{true});
+    }
   }
 };
 
@@ -38,17 +47,14 @@ struct state_transition_action {
 template <int Index>
 struct internal_transition_action {
   void operator()(const internal_transition_event& evt, context& ctx) {
-    ctx.counter /= evt.two;
-  }
-};
-
-// Note: Using a constexpr lambda makes the build slightly slower (at least on
-// GCC)
-template <int Index>
-struct exit_action {
-  void operator()(
-      boost::sml::back::process<internal_transition_event> process) {
-    process(internal_transition_event{});
+    if (evt.enqueued)
+    {
+        ctx.enqueued_internal_transition_counter += evt.two / 2;
+    }
+    else
+    {
+        ctx.internal_transition_counter += evt.two / 2;
+    }
   }
 };
 
@@ -76,11 +82,6 @@ struct large {
                                     internal_transition_action<N>{}
         *COUNTER
 #undef X
-
-#define X(N) \
-  , state<state_tpl<N>> + boost::sml::on_exit<_> / exit_action<N> {}
-            COUNTER
-#undef X
     );
   }
 };
@@ -96,10 +97,14 @@ int test() {
   auto sm = fsm{ctx};
 
   for (auto i = 0; i < test_loop_size; ++i) {
-#define X(N) sm.process_event(state_transition_event<N>{});
+#define X(N) \
+    sm.process_event(state_transition_event<N>{}); \
+    sm.process_event(internal_transition_event{});
     COUNTER
 #undef X
   }
 
-  return ctx.counter;
+  return ctx.transition_counter +
+         ctx.internal_transition_counter +
+         ctx.enqueued_internal_transition_counter;
 }
