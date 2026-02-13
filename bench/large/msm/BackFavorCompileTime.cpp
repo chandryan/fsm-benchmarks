@@ -11,7 +11,5 @@ using fsm0 = msm::back::state_machine<fsm_, msm::back::favor_compile_time>;
 
 int main()
 {
-    test_fsm<fsm0>();
-
-    return 0;
+    return test_fsm<fsm0>();
 }

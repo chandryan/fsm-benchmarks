@@ -80,6 +80,7 @@ struct state_transition_event
 
 struct internal_transition_event
 {
+    bool enqueued = false;
     int two = 2;
 };
 
@@ -96,11 +97,6 @@ struct exit_sub_fsm_event
 template<int Index>
 struct state_tpl: msm::front::state<>
 {
-    template<class Event, class Fsm>
-    void on_exit(const Event& event, Fsm& fsm)
-    {
-        fsm.process_event(internal_transition_event{});
-    }
 };
 
 
@@ -108,9 +104,13 @@ template<int Index>
 struct state_transition_action
 {
     template<class Event, class Fsm, class SourceState, class TargetState>
-    void operator()(const Event& evt, Fsm& sm, SourceState&, TargetState&)
+    void operator()(const Event& evt, Fsm& fsm, SourceState&, TargetState&)
     {
-        sm.counter = (sm.counter + 1) * evt.two;
+        fsm.transition_counter += evt.two / 2;
+        if constexpr ((Index % 5) == 0)
+        {
+            fsm.enqueue_event(internal_transition_event{true});
+        }
     }
 };
 
@@ -118,9 +118,16 @@ template<int Index>
 struct internal_transition_action
 {
     template<class Event, class Fsm, class SourceState, class TargetState>
-    void operator()(const Event& evt, Fsm& sm, SourceState&, TargetState&)
+    void operator()(const Event& evt, Fsm& fsm, SourceState&, TargetState&)
     {
-        sm.counter /= evt.two;
+        if (evt.enqueued)
+        {
+            fsm.enqueued_internal_transition_counter += evt.two / 2;
+        }
+        else
+        {
+            fsm.internal_transition_counter += evt.two / 2;
+        }
     }
 };
 
@@ -151,7 +158,9 @@ struct fsm_: public msm::front::state_machine_def<fsm_<Offset, SubFsm>>
     , Row<sub_fsm, exit_sub_fsm_event, state_tpl<Offset>, none, none>
     >;
 
-    int counter = 0;
+    int transition_counter = 0;
+    int internal_transition_counter = 0;
+    int enqueued_internal_transition_counter = 0;
     static constexpr size_t offset = Offset;
 };
 
@@ -169,7 +178,9 @@ struct fsm_<Offset, void>: public msm::front::state_machine_def<fsm_<Offset, voi
 #undef X
     >;
 
-    int counter = 0;
+    int transition_counter = 0;
+    int internal_transition_counter = 0;
+    int enqueued_internal_transition_counter = 0;
     static constexpr size_t offset = Offset;
 };
 
@@ -186,7 +197,8 @@ int run_fsm()
     for(auto i = 0; i < test_loop_size; ++i)
     {
 #define X(N) \
-    first_sm.process_event(state_transition_event<N>{});
+    first_sm.process_event(state_transition_event<N>{}); \
+    first_sm.process_event(internal_transition_event{});
         COUNTER
 #undef X
     }
@@ -196,7 +208,8 @@ int run_fsm()
     for(auto i = 0; i < test_loop_size; ++i)
     {
 #define X(N) \
-    first_sm.process_event(state_transition_event<N+Fsm::sub_fsm::offset>{});
+    first_sm.process_event(state_transition_event<N+Fsm::sub_fsm::offset>{}); \
+    first_sm.process_event(internal_transition_event{});
         COUNTER
 #undef X
     }
@@ -206,21 +219,30 @@ int run_fsm()
     for(auto i = 0; i < test_loop_size; ++i)
     {
 #define X(N) \
-    first_sm.process_event(state_transition_event<N+Fsm::sub_fsm::sub_fsm::offset>{});
+    first_sm.process_event(state_transition_event<N+Fsm::sub_fsm::sub_fsm::offset>{}); \
+    first_sm.process_event(internal_transition_event{});
         COUNTER
 #undef X
     }
 
-    auto sum = first_sm.counter + second_sm.counter + third_sm.counter;
+    first_sm.process_event(exit_sub_fsm_event{});
+    first_sm.process_event(exit_sub_fsm_event{});
 
-    first_sm.process_event(exit_sub_fsm_event{});
-    first_sm.process_event(exit_sub_fsm_event{});
+    auto sum = first_sm.transition_counter +
+               first_sm.internal_transition_counter +
+               first_sm.enqueued_internal_transition_counter +
+               second_sm.transition_counter +
+               second_sm.internal_transition_counter +
+               second_sm.enqueued_internal_transition_counter +
+               third_sm.transition_counter +
+               third_sm.internal_transition_counter +
+               third_sm.enqueued_internal_transition_counter;
 
     return sum;
 }
 
 template<typename Fsm>
-void test_fsm()
+int test_fsm()
 {
     constexpr auto main_loop_size = 1000;
 
@@ -231,10 +253,6 @@ void test_fsm()
         counter += run_fsm<Fsm>();
     }
 
-    constexpr auto expected_counter = test_loop_size * main_loop_size * PROBLEM_SIZE * 3;
-
-    // std::cout << counter << std::endl;
-    // std::cout << expected_counter << std::endl;
-
-    assert(counter == expected_counter);
+    bool success = (counter == 165000000);
+    return (success ? 0 : 1);
 }

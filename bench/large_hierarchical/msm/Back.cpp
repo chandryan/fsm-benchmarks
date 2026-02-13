@@ -12,7 +12,5 @@ using fsm0 = msm::back::state_machine<fsm_<0, fsm1>>;
 
 int main()
 {
-    test_fsm<fsm0>();
-
-    return 0;
+    return test_fsm<fsm0>();
 }

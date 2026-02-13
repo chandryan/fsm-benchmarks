@@ -13,7 +13,5 @@ struct config : msm::backmp11::state_machine_config
 using fsm0 = msm::backmp11::state_machine<fsm_, config>;
 
 int main() {
-  test_fsm<fsm0>();
-
-  return 0;
+  return test_fsm<fsm0>();
 }
