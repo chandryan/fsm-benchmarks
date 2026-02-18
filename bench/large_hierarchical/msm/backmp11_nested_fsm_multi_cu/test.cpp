@@ -1,8 +1,6 @@
-#include "common.hpp"
+#include "msm.hpp"
 
-int main()
+int test()
 {
-    test_fsm<fsm0>();
-
-    return 0;
+    return run_fsm<fsm0>();
 }

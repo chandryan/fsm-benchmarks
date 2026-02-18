@@ -4,10 +4,24 @@
 //https://www.boost.org/LICENSE_1_0.txt)
 //Official repository: https://github.com/fgoujeon/fsm-benchmark
 
+#pragma once
+
 #define PROBLEM_SIZE 25
 #define PROBLEM_SIZE_X_2 50
 
-#define COUNTER \
+#define FOR_RANGE_10 \
+    X(0) \
+    X(1) \
+    X(2) \
+    X(3) \
+    X(4) \
+    X(5) \
+    X(6) \
+    X(7) \
+    X(8) \
+    X(9)
+
+#define FOR_RANGE_25 \
     X(0) \
     X(1) \
     X(2) \
@@ -64,19 +78,15 @@
 
 constexpr auto test_loop_size = 1000;
 
-int test();
 
-int main()
+template<int Index>
+struct state_transition_event
 {
-    constexpr auto main_loop_size = 1000;
+    int two = 2;
+};
 
-    auto counter = 0;
-
-    for(auto i = 0; i < main_loop_size; ++i)
-    {
-        counter += test();
-    }
-
-    bool success = (counter == 55000000);
-    return(success ? 0 : 1);
-}
+struct internal_transition_event
+{
+    bool enqueued = false;
+    int two = 2;
+};

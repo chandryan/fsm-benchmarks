@@ -1,3 +1,4 @@
-#include "common.hpp"
+#define EXCLUDE_MAIN
+#include "msm.hpp"
 
 BOOST_MSM_BACKMP11_GENERATE_STATE_MACHINE(fsm1);

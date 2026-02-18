@@ -14,13 +14,13 @@ No instantiation of a state machine, only the headers of the library are include
 
 *Large state machine:*
 
-Similar benchmark as tested in https://github.com/fgoujeon/fsm-benchmark[fsm-benchmark], but with a few differences.
+A state machine gets constructed 1,000 times and processes events for 1,000*1,000 iterations.
+The events trigger transitions and internal transitions in alternation. In total it processes:
 
-The state machine gets constructed and processes events for 1000 iterations. The events trigger transitions and internal transitions in alternation. In total it processes:
-
-* 25000000 transitions
-* 25000000 internal transitions
-* 5000000 internal transitions via the event pool (events enqueued every 5th transition)
+* 25,000,000 transitions (25 states with 1 transition event each)
+* 25,000,000 internal transitions (all states share a common internal transition event)
+*  5,000,000 internal transitions from the event queue/pool (5/25 transition events trigger a process_event while the SM is processing)
+* 10,000,000 entry actions (10/25 states have entry actions)
 
 
 *Large hierarchical state machine:*
@@ -38,7 +38,8 @@ One iteration in this benchmark runs as follows:
 * enter fsm2 and process events
 * exit fsm2 and exit fsm1
 
-The events handled by each state machine overlap with each other to simulate transition conflicts. Each state machine processes the same amount of events as in the large state machine benchmark.
+The events handled by each state machine overlap with each other to simulate transition conflicts.
+Each state machine processes a similar amount of events as in the large state machine benchmark.
 
 
 == Tested libraries
@@ -48,7 +49,7 @@ The following libraries are benchmarked:
 *MSM:*
 
 MSM is used with 3 back-ends `back`, `back11` and `backmp11`.
-The back-end `backmp11` is a recent addition. For more details about the applied optimizations and changes to previous back-ends take a look at the https://github.com/boostorg/msm/blob/develop/include/boost/msm/backmp11/README.md[backmp11's README].
+The back-end `backmp11` is a recent addition. For more details about the applied optimizations and changes to previous back-ends take a look at the https://www.boost.org/doc/libs/latest/doc/antora/msm/tutorial/backmp11-back-end.html[MSM documentation].
 
 Only the functor frontend is used in the benchmarks. The following backend configurations are tested:
 
@@ -56,7 +57,7 @@ Only the functor frontend is used in the benchmarks. The following backend confi
 * `back11` backend
 * `backmp11` backend with `favor_runtime_speed` and `favor_compile_time` compile policies
 
-Last run was done on commit 5f8422e8316ffeed8163795c6439d88b9a30b191.
+Last run was done on commit a579aefd5373c80c095644dadd3030fa09d9b5ff.
 
 
 *SML:*
@@ -83,7 +84,7 @@ System used for running the benchmarks:
 | back                        | 2.3           | 224
 | back_favor_compile_time     | 2.3           | 224
 | back11                      | 2.3           | 224
-| backmp11                    | 0.6           | 126
+| backmp11                    | 0.6           | 127
 | backmp11_favor_compile_time | 0.7           | 131
 | sml                         | 0.1           | 95
 |=======================================================
@@ -94,12 +95,12 @@ System used for running the benchmarks:
 [width=80%, cols="3,1,1,1", options="header"]
 |=======================================================================
 |                             | Compile / sec | RAM / MB | Runtime / sec
-| back                        | 16            | 953      | 2.8
-| back_favor_compile_time     | 21            | 1000     | 3.3
-| back11                      | 40            | 2794     | 2.7
-| backmp11                    | 3             | 217      | 1.1
-| backmp11_favor_compile_time | 3             | 205      | 6.0
-| sml                         | 3             | 207      | 0.5
+| back                        | 17            | 961      | 2.8
+| back_favor_compile_time     | 22            | 1006     | 3.5
+| back11                      | 40            | 2802     | 2.7
+| backmp11                    | 3             | 218      | 1.1
+| backmp11_favor_compile_time | 3             | 206      | 6.0
+| sml                         | 6             | 273      | 0.5
 |=======================================================================
 
 
@@ -108,10 +109,10 @@ System used for running the benchmarks:
 [width=80%, cols="3,1,1,1", options="header"]
 |================================================================================
 |                                      | Compile / sec | RAM / MB | Runtime / sec
-| back                                 | 62            | 2849     | 13.4
-| back_favor_compile_time              | 73            | 2551     | > 300
-| backmp11                             | 9             | 360      | 5.3
-| backmp11_favor_compile_time          | 6             | 273      | 20.3
-| backmp11_favor_compile_time_multi_cu | 4             | ~907     | 20.6
-| sml                                  | 11            | 436      | 2.9
+| back                                 | 64            | 2902     | 13.2
+| back_favor_compile_time              | 75            | 2612     | > 300
+| backmp11                             | 9             | 370      | 5.2
+| backmp11_favor_compile_time          | 6             | 282      | 20.3
+| backmp11_favor_compile_time_multi_cu | 4             | ~917     | 20.7
+| sml                                  | 24            | 706      | 5.7
 |================================================================================

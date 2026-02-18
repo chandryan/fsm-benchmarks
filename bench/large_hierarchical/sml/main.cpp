@@ -4,126 +4,61 @@
 // https://www.boost.org/LICENSE_1_0.txt)
 // Official repository: https://github.com/fgoujeon/fsm-benchmark
 
-#include <boost/sml.hpp>
-#include <cassert>
-#include <queue>
-#include "common.hpp"
+#include "sml_common.hpp"
+#include "large_hierarchical_common.hpp"
 
-struct context {
-  int transition_counter = 0;
-  int internal_transition_counter = 0;
-  int enqueued_internal_transition_counter = 0;
-};
-
-template <int Index>
-struct state_tpl {};
-
-template <int Index>
-struct state_transition_event {
-  int two = 2;
-};
-
-struct internal_transition_event {
-  bool enqueued = false;
-  int two = 2;
-};
-
-struct enter_sub_fsm_event {
-  int two = 2;
-};
-
-struct exit_sub_fsm_event {
-  int two = 2;
-};
-
-// Note: Using a constexpr lambda makes the build slightly slower (at least on
-// GCC)
-template <int Index>
-struct state_transition_action {
-  void operator()(const state_transition_event<Index>& evt,
-                  boost::sml::back::process<internal_transition_event> process,
-                  context& ctx) {
-    ctx.transition_counter += evt.two / 2;
-    if constexpr ((Index % 5) == 0)
-    {
-        process(internal_transition_event{true});
-    }
-  }
-};
-
-// Note: Using a constexpr lambda makes the build slightly slower (at least on
-// GCC)
-template <int Index>
-struct internal_transition_action {
-  void operator()(const internal_transition_event& evt, context& ctx) {
-    if (evt.enqueued)
-    {
-        ctx.enqueued_internal_transition_counter += evt.two / 2;
-    }
-    else
-    {
-        ctx.internal_transition_counter += evt.two / 2;
-    }
-  }
-};
-
-// Note: Using a constexpr lambda makes the build slightly slower (at least on
-// GCC)
-template <int Index>
-struct guard {
-  bool operator()(const state_transition_event<Index>& evt) {
-    return evt.two >= 0;
-  }
-};
+#define TRANSITION_ROW_WITH_OFFSET(N) state<state_tpl<N + Offset>> + event<state_transition_event<N + Offset>>[guard<N + Offset>{}] / state_transition_action<N + Offset>{} = state<state_tpl<(N + 1) % 25 + Offset>>
 
 template <size_t Offset = 0, typename SubFsm = void>
-struct fsm_;
+struct fsm;
 
 template <size_t Offset, typename SubFsm>
-struct fsm_ {
+struct fsm {
   using sub_fsm = SubFsm;
 
   auto operator()() const {
     using namespace boost::sml;
 
     return make_transition_table(
-#define X(N)                                                                 \
-  COMMA_IF_NOT_0(N)                                                          \
-  state<state_tpl<N + Offset>> +                                             \
-      event<state_transition_event<N + Offset>>[guard<N + Offset>{}] /       \
-          state_transition_action<N + Offset>{} =                            \
-      state<state_tpl<(N + 1) % PROBLEM_SIZE + Offset>>,                     \
-                                      state<state_tpl<N + Offset>> +         \
-                                          event<internal_transition_event> / \
-                                              internal_transition_action<    \
-                                                  N + Offset>{}
-        *COUNTER
+#define X(N)                                \
+  COMMA_IF_NOT_0(N)                         \
+      TRANSITION_ROW_WITH_OFFSET(N),           \
+      INTERNAL_TRANSITION_ROW(N + Offset)
+        *FOR_RANGE_25
+#undef X
+,
+#define X(N)                                \
+  COMMA_IF_NOT_0(N)                         \
+      ENTRY_ACTION_ROW((N*2) + Offset)
+        *FOR_RANGE_10
 #undef X
         ,
         state<state_tpl<Offset>> + event<enter_sub_fsm_event> = state<SubFsm>,
-        state<SubFsm> + event<exit_sub_fsm_event> = state<state_tpl<Offset>>);
+        state<SubFsm> + event<exit_sub_fsm_event> = state<state_tpl<Offset>>
+        );
   }
 
   static constexpr size_t offset = Offset;
 };
 
 template <size_t Offset>
-struct fsm_<Offset, void> {
+struct fsm<Offset, void> {
   auto operator()() const {
     using namespace boost::sml;
 
     // clang-format off
     return make_transition_table(
-#define X(N)                                                                 \
-  COMMA_IF_NOT_0(N)                                                          \
-  state<state_tpl<N + Offset>> +                                             \
-    event<state_transition_event<N + Offset>>[guard<N + Offset>{}] /         \
-    state_transition_action<N + Offset>{} =                                  \
-    state<state_tpl<(N + 1) % PROBLEM_SIZE + Offset>>,                       \
-  state<state_tpl<N + Offset>> +                                             \
-    event<internal_transition_event> /                                       \
-    internal_transition_action<N + Offset>{}
-  *COUNTER
+#define X(N)                                \
+  COMMA_IF_NOT_0(N)                         \
+      TRANSITION_ROW_WITH_OFFSET(N),           \
+      INTERNAL_TRANSITION_ROW(N + Offset)
+        *FOR_RANGE_25
+#undef X
+,
+#define X(N)                                \
+  COMMA_IF_NOT_0(N)                         \
+      ENTRY_ACTION_ROW((N*2) + Offset)
+        *FOR_RANGE_10
 #undef X
     );
 
@@ -145,7 +80,7 @@ int run_fsm() {
 #define X(N) \
   first_sm.process_event(state_transition_event<N>{}); \
   first_sm.process_event(internal_transition_event{});
-    COUNTER
+    FOR_RANGE_25
 #undef X
   }
 
@@ -155,7 +90,7 @@ int run_fsm() {
 #define X(N) \
   first_sm.process_event(state_transition_event<N+Fsm::sub_fsm::offset>{}); \
   first_sm.process_event(internal_transition_event{});
-    COUNTER
+    FOR_RANGE_25
 #undef X
   }
 
@@ -165,7 +100,7 @@ int run_fsm() {
 #define X(N) \
   first_sm.process_event(state_transition_event<N+Fsm::sub_fsm::sub_fsm::offset>{}); \
   first_sm.process_event(internal_transition_event{});
-    COUNTER
+    FOR_RANGE_25
 #undef X
   }
 
@@ -174,33 +109,21 @@ int run_fsm() {
 
   auto sum = ctx.transition_counter +
              ctx.internal_transition_counter +
-             ctx.enqueued_internal_transition_counter;
+             ctx.enqueued_internal_transition_counter +
+             ctx.entry_action_counter;
   
   ctx.transition_counter = 0;
   ctx.internal_transition_counter = 0;
   ctx.enqueued_internal_transition_counter = 0;
+  ctx.entry_action_counter = 0;
 
   return sum;
 }
 
-template <typename Fsm>
-int test_fsm() {
-  constexpr auto main_loop_size = 1000;
+using fsm2 = fsm<PROBLEM_SIZE / 2>;
+using fsm1 = fsm<PROBLEM_SIZE / 3, fsm2>;
+using fsm0 = fsm<0, fsm1>;
 
-  auto counter = 0;
-
-  for (auto i = 0; i < main_loop_size; ++i) {
-    counter += run_fsm<Fsm>();
-  }
-
-  volatile bool success = (counter == 165000000);
-  return (success ? 0 : 1);
-}
-
-using fsm2 = fsm_<PROBLEM_SIZE / 2>;
-using fsm1 = fsm_<PROBLEM_SIZE / 3, fsm2>;
-using fsm0 = fsm_<0, fsm1>;
-
-int main() {
-  return test_fsm<fsm0>();
+int test() {
+  return run_fsm<fsm0>();
 }

@@ -1,3 +1,5 @@
+include_directories(include)
+
 add_subdirectory(header_inclusion)
 add_subdirectory(large)
 add_subdirectory(large_hierarchical)

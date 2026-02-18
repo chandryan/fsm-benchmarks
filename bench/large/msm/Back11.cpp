@@ -1,10 +1,12 @@
 #define TRANSITION_TABLE_TYPE boost::fusion::vector
-#include "common.hpp"
+
+#include "msm.hpp"
+#include "large_common.hpp"
 #include <boost/msm/back11/state_machine.hpp>
 
-using fsm0 = msm::back11::state_machine<fsm_>;
+using fsm = msm::back11::state_machine<fsm_>;
 
-int main()
+int test()
 {
-    return test_fsm<fsm0>();
+    return run_fsm<fsm>();
 }

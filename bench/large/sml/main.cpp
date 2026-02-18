@@ -4,83 +4,25 @@
 // https://www.boost.org/LICENSE_1_0.txt)
 // Official repository: https://github.com/fgoujeon/fsm-benchmark
 
-#include <boost/sml.hpp>
-#include <queue>
-#include "common.hpp"
-
-struct context {
-  int transition_counter = 0;
-  int internal_transition_counter = 0;
-  int enqueued_internal_transition_counter = 0;
-};
-
-template <int Index>
-struct state_tpl {};
-
-template <int Index>
-struct state_transition_event {
-  int two = 2;
-};
-
-struct internal_transition_event {
-  bool enqueued = false;
-  int two = 2;
-};
-
-// Note: Using a constexpr lambda makes the build slightly slower (at least on
-// GCC)
-template <int Index>
-struct state_transition_action {
-  void operator()(const state_transition_event<Index>& evt, 
-                  boost::sml::back::process<internal_transition_event> process,
-                  context& ctx) {
-    ctx.transition_counter += evt.two / 2;
-    if constexpr ((Index % 5) == 0)
-    {
-        process(internal_transition_event{true});
-    }
-  }
-};
-
-// Note: Using a constexpr lambda makes the build slightly slower (at least on
-// GCC)
-template <int Index>
-struct internal_transition_action {
-  void operator()(const internal_transition_event& evt, context& ctx) {
-    if (evt.enqueued)
-    {
-        ctx.enqueued_internal_transition_counter += evt.two / 2;
-    }
-    else
-    {
-        ctx.internal_transition_counter += evt.two / 2;
-    }
-  }
-};
-
-// Note: Using a constexpr lambda makes the build slightly slower (at least on
-// GCC)
-template <int Index>
-struct guard {
-  bool operator()(const state_transition_event<Index>& evt) {
-    return evt.two >= 0;
-  }
-};
+#include "sml_common.hpp"
+#include "large_common.hpp"
 
 struct large {
   auto operator()() const {
     using namespace boost::sml;
 
     return make_transition_table(
-#define X(N)                                                       \
-  COMMA_IF_NOT_0(N)                                                \
-      state<state_tpl<N>> +                                        \
-      event<state_transition_event<N>>[guard<N>{}] /               \
-          state_transition_action<N>{} =                           \
-      state<state_tpl<(N + 1) % PROBLEM_SIZE>>,                    \
-          state<state_tpl<N>> + event<internal_transition_event> / \
-                                    internal_transition_action<N>{}
-        *COUNTER
+#define X(N)                                \
+  COMMA_IF_NOT_0(N)                         \
+      TRANSITION_ROW(N),                    \
+      INTERNAL_TRANSITION_ROW(N)
+        *FOR_RANGE_25
+#undef X
+,
+#define X(N)                                \
+  COMMA_IF_NOT_0(N)                         \
+      ENTRY_ACTION_ROW(N*2)
+        *FOR_RANGE_10
 #undef X
     );
   }
@@ -100,11 +42,12 @@ int test() {
 #define X(N) \
     sm.process_event(state_transition_event<N>{}); \
     sm.process_event(internal_transition_event{});
-    COUNTER
+    FOR_RANGE_25
 #undef X
   }
 
   return ctx.transition_counter +
          ctx.internal_transition_counter +
-         ctx.enqueued_internal_transition_counter;
+         ctx.enqueued_internal_transition_counter +
+         ctx.entry_action_counter;
 }
