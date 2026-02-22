@@ -27,8 +27,8 @@ file(WRITE "${CMAKE_BINARY_DIR}/timed_compile.sh"
 enable_testing()
 set(CMAKE_CXX_COMPILER_LAUNCHER sh "${CMAKE_BINARY_DIR}/timed_compile.sh")
 
-include_directories(msm/include)
-# include_directories(../boost/libs/msm/include)
+# include_directories(msm/include)
+include_directories(../boost/libs/msm/include)
 include_directories(sml/include)
 
 add_subdirectory(bench)
