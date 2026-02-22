@@ -5,7 +5,12 @@ This repo contains benchmarks for C++ state machine libraries.
 It has been originally created to test various optimizations of the https://github.com/boostorg/msm[Boost MSM] library.
 
 
-== Benchmark scenarios
+== Benchmarks
+
+Compile resources are measured with the command `time -f "%e seconds, %M kB RAM"`.
+RAM usage is the peak RAM reported by `time` (in KiB), converted to MB by dividing by 1000.
+Binary size corresponds to the sum of the `text` and `data` segments reported by the `size` command (Berkeley format), divided by 1000.
+
 
 *Header inclusion:*
 
@@ -51,13 +56,13 @@ The following libraries are benchmarked:
 MSM is used with 3 back-ends `back`, `back11` and `backmp11`.
 The back-end `backmp11` is a recent addition. For more details about the applied optimizations and changes to previous back-ends take a look at the https://www.boost.org/doc/libs/latest/doc/antora/msm/tutorial/backmp11-back-end.html[MSM documentation].
 
-Only the functor frontend is used in the benchmarks. The following backend configurations are tested:
+Only the functor front-end is used in the benchmarks. The following back-end configurations are tested:
 
-* `back` backend with `favor_runtime_speed` and `favor_compile_time` compile policies
-* `back11` backend
-* `backmp11` backend with `favor_runtime_speed` and `favor_compile_time` compile policies
+* `back` back-end with `favor_runtime_speed` and `favor_compile_time` compile policies
+* `back11` back-end
+* `backmp11` back-end with `favor_runtime_speed` and `favor_compile_time` compile policies
 
-Last run was done on commit a579aefd5373c80c095644dadd3030fa09d9b5ff.
+Last run was done on commit d0cf98bd39aaf529005f5dff83dbfc0e26a5a468.
 
 
 *SML:*
@@ -67,52 +72,52 @@ https://github.com/boost-ext/sml[SML] is tested with a default configuration.
 Last run was done on commit d0b0df7d39d05c6d31db3aebe64990e00cc08bd2.
 
 
-== Benchmark results
+== Results
 
 System used for running the benchmarks:
 
 * Intel i7-6700K @4GHZ, 32 GB RAM
-* Clang 19.1.4, RelWithDebInfo, C++20
+* Clang 19.1.4, Release build, C++20
 * CUs are compiled one-by-one except the multi_cu benchmark for MSM with `backmp11` & `favor_compile_time`
 
 
 *Header inclusion*
 
-[width=67%, cols="3,1,1", options="header"]
+[%autowidth, options="header"]
 |=======================================================
 |                             | Compile / sec | RAM / MB 
 | back                        | 2.3           | 224
 | back_favor_compile_time     | 2.3           | 224
 | back11                      | 2.3           | 224
-| backmp11                    | 0.6           | 127
-| backmp11_favor_compile_time | 0.7           | 131
+| backmp11                    | 0.6           | 126
+| backmp11_favor_compile_time | 0.6           | 130
 | sml                         | 0.1           | 95
 |=======================================================
 
 
 *Large state machine*
 
-[width=80%, cols="3,1,1,1", options="header"]
-|=======================================================================
-|                             | Compile / sec | RAM / MB | Runtime / sec
-| back                        | 17            | 961      | 2.8
-| back_favor_compile_time     | 22            | 1006     | 3.5
-| back11                      | 40            | 2802     | 2.7
-| backmp11                    | 3             | 218      | 1.1
-| backmp11_favor_compile_time | 3             | 206      | 6.0
-| sml                         | 6             | 273      | 0.5
-|=======================================================================
+[%autowidth, options="header"]
+|=======================================================================================================
+|                             | Compile time / sec | Compile RAM / MB | Binary size / kB | Runtime / sec
+| back                        | 14                 | 815              | 68               | 2.8
+| back_favor_compile_time     | 17                 | 775              | 226              | 3.5
+| back11                      | 37                 | 2682             | 84               | 2.8
+| backmp11                    | 3                  | 209              | 29               | 0.7
+| backmp11_favor_compile_time | 3                  | 193              | 43               | 6.0
+| sml                         | 5                  | 234              | 57               | 0.3
+|=======================================================================================================
 
 
 *Large hierarchical state machine*
 
-[width=80%, cols="3,1,1,1", options="header"]
-|================================================================================
-|                                      | Compile / sec | RAM / MB | Runtime / sec
-| back                                 | 64            | 2902     | 13.2
-| back_favor_compile_time              | 75            | 2612     | > 300
-| backmp11                             | 9             | 370      | 5.2
-| backmp11_favor_compile_time          | 6             | 282      | 20.3
-| backmp11_favor_compile_time_multi_cu | 4             | ~917     | 20.7
-| sml                                  | 24            | 706      | 5.7
-|================================================================================
+[%autowidth, options="header"]
+|================================================================================================================
+|                                      | Compile time / sec | Compile RAM / MB | Binary size / kB | Runtime / sec
+| back                                 | 49                 | 2165             | 230              | 13.2
+| back_favor_compile_time              | 55                 | 1704             | 911              | > 300
+| backmp11                             | 8                  | 351              | 85               | 3.3
+| backmp11_favor_compile_time          | 5                  | 256              | 100              | 20.4
+| backmp11_favor_compile_time_multi_cu | 5                  | ~863             | 100              | 20.8
+| sml                                  | 18                 | 543              | 422              | 5.4
+|================================================================================================================
