@@ -77,7 +77,7 @@ Last run was done on commit d0b0df7d39d05c6d31db3aebe64990e00cc08bd2.
 System used for running the benchmarks:
 
 * Intel i7-6700K @4GHZ, 32 GB RAM
-* Clang 19.1.4, Release build, C++20
+* Linux, Clang 21.1.8, Release build, C++20
 * CUs are compiled one-by-one except the multi_cu benchmark for MSM with `backmp11` & `favor_compile_time`
 
 
@@ -86,12 +86,12 @@ System used for running the benchmarks:
 [%autowidth, options="header"]
 |=======================================================
 |                             | Compile / sec | RAM / MB 
-| back                        | 2.3           | 224
-| back_favor_compile_time     | 2.3           | 224
-| back11                      | 2.3           | 224
-| backmp11                    | 0.4           | 117
-| backmp11_favor_compile_time | 0.6           | 129
-| sml                         | 0.1           | 95
+| back                        | 1.6           | 232
+| back_favor_compile_time     | 2.7           | 232
+| back11                      | 1.6           | 224
+| backmp11                    | 0.3           | 123
+| backmp11_favor_compile_time | 0.5           | 133
+| sml                         | 0.1           | 97
 |=======================================================
 
 
@@ -100,12 +100,12 @@ System used for running the benchmarks:
 [%autowidth, options="header"]
 |=======================================================================================================
 |                             | Compile time / sec | Compile RAM / MB | Binary size / kB | Runtime / sec
-| back                        | 14                 | 815              | 68               | 2.8
-| back_favor_compile_time     | 17                 | 775              | 226              | 3.5
-| back11                      | 37                 | 2682             | 84               | 2.8
-| backmp11                    | 3                  | 209              | 29               | 0.7
-| backmp11_favor_compile_time | 3                  | 194              | 43               | 6.0
-| sml                         | 5                  | 235              | 57               | 0.3
+| back                        | 10                 | 844              | 73               | 0.7
+| back_favor_compile_time     | 12                 | 821              | 241              | 1.0
+| back11                      | 26                 | 2675             | 92               | 0.7
+| backmp11                    | 2                  | 238              | 30               | 0.4
+| backmp11_favor_compile_time | 2                  | 225              | 46               | 2.4
+| sml                         | 3                  | 242              | 57               | 0.1
 |=======================================================================================================
 
 
@@ -114,10 +114,10 @@ System used for running the benchmarks:
 [%autowidth, options="header"]
 |================================================================================================================
 |                                      | Compile time / sec | Compile RAM / MB | Binary size / kB | Runtime / sec
-| back                                 | 49                 | 2165             | 230              | 13.2
-| back_favor_compile_time              | 55                 | 1704             | 911              | > 300
-| backmp11                             | 8                  | 349              | 82               | 3.3
-| backmp11_favor_compile_time          | 5                  | 262              | 97               | 20.0
-| backmp11_favor_compile_time_multi_cu | 4                  | ~863             | 97               | 20.2
-| sml                                  | 18                 | 543              | 422              | 5.4
+| back                                 | 32                 | 2160             | 252              | 3.7
+| back_favor_compile_time              | 37                 | 1747             | 974              | 263
+| backmp11                             | 5                  | 369              | 87               | 2.0
+| backmp11_favor_compile_time          | 4                  | 264              | 105              | 8.3
+| backmp11_favor_compile_time_multi_cu | 3                  | ~936             | 105              | 8.6
+| sml                                  | 12                 | 567              | 436              | 2.5
 |================================================================================================================
