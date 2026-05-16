@@ -41,8 +41,7 @@ struct state_transition_action
         fsm.transition_counter += evt.two / 2;
         if constexpr ((Index % 5) == 0)
         {
-            // fsm.enqueue_event(internal_transition_event{true});
-            fsm.process_event(internal_transition_event{true});
+            fsm.enqueue_event(internal_transition_event{true});
         }
     }
 };
