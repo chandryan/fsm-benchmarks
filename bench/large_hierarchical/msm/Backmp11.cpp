@@ -3,7 +3,9 @@
 #include <boost/mp11.hpp>
 #include "msm.hpp"
 #include <boost/msm/backmp11/state_machine.hpp>
+// #include <boost/msm/backmp11/interceptor.hpp>
 #include "large_hierarchical_common.hpp"
+
 
 struct config;
 
@@ -18,6 +20,7 @@ struct config : msm::backmp11::state_machine_config
     // to filter out for which SM it requires to instantiate
     // construction-related methods.
     using root_sm = fsm0;
+    // using interceptor = msm::backmp11::interceptor;
 };
 
 int test()

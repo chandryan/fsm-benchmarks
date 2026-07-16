@@ -62,14 +62,14 @@ Only the functor front-end is used in the benchmarks. The following back-end con
 * `back11` back-end
 * `backmp11` back-end with `favor_runtime_speed` and `favor_compile_time` compile policies
 
-Last run was done on commit 3a2c962831dbf1715cc71bc99d497863f4cc31ec.
+Last run was done on commit 56d843170ef32cdab1471c467431d9cecbc0b073.
 
 
 *SML:*
 
 https://github.com/boost-ext/sml[SML] is tested with a default configuration.
 
-Last run was done on commit 0fe36fddcbf1cf1d80f9bd5ed8bdb0e1d4c0d73b.
+Last run was done on commit 326b9481e142ec0a6a3aef381fc217192f593afc.
 
 
 == Results
@@ -103,9 +103,9 @@ System used for running the benchmarks:
 | back                        | 10                 | 844              | 73               | 0.7
 | back_favor_compile_time     | 12                 | 821              | 241              | 1.0
 | back11                      | 26                 | 2675             | 92               | 0.7
-| backmp11                    | 2                  | 236              | 18               | 0.2
-| backmp11_favor_compile_time | 2                  | 225              | 44               | 2.2
-| sml                         | 4                  | 254              | 64               | 0.1
+| backmp11                    | 2                  | 236              | 19               | 0.2
+| backmp11_favor_compile_time | 2                  | 226              | 44               | 2.2
+| sml                         | 4                  | 255              | 64               | 0.1
 |=======================================================================================================
 
 
@@ -116,7 +116,7 @@ System used for running the benchmarks:
 |                             | Compile time / sec | Compile RAM / MB | Binary size / kB | Runtime / sec
 | back                        | 32                 | 2160             | 252              | 3.7
 | back_favor_compile_time     | 37                 | 1747             | 974              | 263
-| backmp11                    | 5                  | 361              | 55               | 0.9
-| backmp11_favor_compile_time | 3                  | 264              | 96               | 7.5
-| sml                         | 13                 | 612              | 460              | 2.8
+| backmp11                    | 5                  | 360              | 57               | 0.9
+| backmp11_favor_compile_time | 3                  | 266              | 96               | 7.5
+| sml                         | 13                 | 613              | 431              | 2.7
 |=======================================================================================================
