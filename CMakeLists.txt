@@ -28,7 +28,7 @@ enable_testing()
 set(CMAKE_CXX_COMPILER_LAUNCHER sh "${CMAKE_BINARY_DIR}/timed_compile.sh")
 
 include_directories(msm/include)
-# include_directories(../msm/include)
+include_directories(../msm2/include)
 include_directories(sml/include)
 
 add_subdirectory(bench)
@@ -41,11 +41,15 @@ add_dependencies(benchmarks_main
     large_msm_back11
     large_msm_backmp11
     large_msm_backmp11_favor_compile_time
+    large_msm2
+    large_msm2_favor_compile_time
     large_sml
     # Large hierarchical SM
     large_hierarchical_msm_back
     large_hierarchical_msm_back_favor_compile_time
     large_hierarchical_msm_backmp11
     large_hierarchical_msm_backmp11_favor_compile_time
+    large_hierarchical_msm2
+    large_hierarchical_msm2_favor_compile_time
     large_hierarchical_sml
 )

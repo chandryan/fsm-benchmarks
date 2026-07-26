@@ -1,0 +1,9 @@
+add_library(header_inclusion_msm2 Normal.cpp)
+
+add_library(header_inclusion_msm2_favor_compile_time FavorCompileTime.cpp)
+
+add_custom_target(benchmarks_header_inclusion_msm2)
+add_dependencies(benchmarks_header_inclusion_msm2
+    header_inclusion_msm2
+    header_inclusion_msm2_favor_compile_time
+)
