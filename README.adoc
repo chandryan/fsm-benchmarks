@@ -105,6 +105,8 @@ System used for running the benchmarks:
 | back11                      | 26                 | 2675             | 92               | 0.7
 | backmp11                    | 2                  | 236              | 19               | 0.2
 | backmp11_favor_compile_time | 2                  | 226              | 44               | 2.2
+| msm2                        | 1                  | 175              | 19               | 0.2
+| msm2_favor_compile_time     | 2                  | 160              | 44               | 2.2
 | sml                         | 4                  | 255              | 64               | 0.1
 |=======================================================================================================
 
@@ -118,5 +120,7 @@ System used for running the benchmarks:
 | back_favor_compile_time     | 37                 | 1747             | 974              | 263
 | backmp11                    | 5                  | 360              | 57               | 0.9
 | backmp11_favor_compile_time | 3                  | 266              | 96               | 7.5
+| msm2                        | 4                  | 308              | 57               | 0.9
+| msm2_favor_compile_time     | 3                  | 219              | 96               | 7.5
 | sml                         | 13                 | 613              | 431              | 2.7
 |=======================================================================================================

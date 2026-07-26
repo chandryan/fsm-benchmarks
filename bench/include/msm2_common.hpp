@@ -2,11 +2,6 @@
 
 #include "common.hpp"
 
-// msm2 forward-declares boost::mpl::is_sequence (to avoid an MPL header
-// dependency) but evaluates it when resolving transition targets, so the
-// front-end TU must provide a complete definition.
-#include <boost/mpl/is_sequence.hpp>
-
 #include <boost/msm2/front/composite_state.hpp>
 #include <boost/msm2/front/rows.hpp>
 #include <boost/msm2/front/states.hpp>
