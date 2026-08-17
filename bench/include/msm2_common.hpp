@@ -30,7 +30,7 @@ struct state_tpl: front::state
     {
         if constexpr ((Index < 20) && (Index % 2 == 0))
         {
-            fsm.entry_action_counter += event.two / 2;
+            fsm->entry_action_counter += event.two / 2;
         }
     }
 };
@@ -41,7 +41,7 @@ struct state_transition_action
     template<class Event, class Fsm, class SourceState, class TargetState>
     void operator()(const Event& evt, Fsm& fsm, SourceState&, TargetState&)
     {
-        fsm.transition_counter += evt.two / 2;
+        fsm->transition_counter += evt.two / 2;
         if constexpr ((Index % 5) == 0)
         {
             fsm.enqueue_event(internal_transition_event{true});
@@ -57,11 +57,11 @@ struct internal_transition_action
     {
         if (evt.enqueued)
         {
-            sm.enqueued_internal_transition_counter += evt.two / 2;
+            sm->enqueued_internal_transition_counter += evt.two / 2;
         }
         else
         {
-            sm.internal_transition_counter += evt.two / 2;
+            sm->internal_transition_counter += evt.two / 2;
         }
     }
 };

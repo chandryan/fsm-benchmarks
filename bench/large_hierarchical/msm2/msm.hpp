@@ -5,7 +5,7 @@
 #define INTERNAL_TRANSITION_ROW_WITH_OFFSET(N) front::row<state_tpl<N, Offset>, internal_transition_event, front::none, internal_transition_action<N + Offset>>
 
 template<size_t Offset = 0, typename SubFsm = void>
-struct fsm_: public front::composite_state
+struct Composite: public front::composite_state
 {
     using initial_state = state_tpl<0, Offset>;
     using sub_fsm = SubFsm;
@@ -31,7 +31,7 @@ struct fsm_: public front::composite_state
 };
 
 template<size_t Offset>
-struct fsm_<Offset, void>: public front::composite_state
+struct Composite<Offset, void>: public front::composite_state
 {
     using initial_state = state_tpl<0, Offset>;
 
@@ -56,9 +56,14 @@ struct fsm_<Offset, void>: public front::composite_state
 template<typename Fsm>
 int run_fsm()
 {
+    // Back-end types the submachines are stored as.
+    using second_sm_t = typename Fsm::template state_t<typename Fsm::sub_fsm>;
+    using third_sm_t =
+        typename second_sm_t::template state_t<typename Fsm::sub_fsm::sub_fsm>;
+
     auto first_sm = Fsm{};
-    auto& second_sm = first_sm.template get_state<typename Fsm::sub_fsm&>();
-    auto& third_sm = second_sm.template get_state<typename Fsm::sub_fsm::sub_fsm&>();
+    auto& second_sm = first_sm.template get_state<second_sm_t>();
+    auto& third_sm = second_sm.template get_state<third_sm_t>();
 
     first_sm.start(starting{});
 

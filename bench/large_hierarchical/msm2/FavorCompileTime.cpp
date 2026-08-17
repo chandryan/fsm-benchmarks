@@ -5,23 +5,16 @@
 #include <boost/msm2/back/favor_compile_time.hpp>
 #include <boost/msm2/back/state_machine.hpp>
 
-struct config;
-
-using fsm2 = back::state_machine<fsm_<PROBLEM_SIZE / 2>, config>;
-using fsm1 = back::state_machine<fsm_<PROBLEM_SIZE / 3, fsm2>, config>;
-using fsm0 = back::state_machine<fsm_<0, fsm1>, config>;
-
 struct config : back::state_machine_config
 {
     using compile_policy = back::favor_compile_time;
-    // Using root_sm is functionally not required for the test,
-    // but it reduces compilation by enabling the back-end
-    // to filter out for which SM it requires to instantiate
-    // construction-related methods.
-    using root_sm = fsm0;
 };
+
+using Composite2 = Composite<PROBLEM_SIZE / 2>;
+using Composite1 = Composite<PROBLEM_SIZE / 3, Composite2>;
+using StateMachine = back::state_machine<Composite<0, Composite1>, config>;
 
 int test()
 {
-    return run_fsm<fsm0>();
+    return run_fsm<StateMachine>();
 }

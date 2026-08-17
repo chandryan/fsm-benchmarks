@@ -122,8 +122,8 @@ int run_fsm() {
 
 using fsm2 = fsm<PROBLEM_SIZE / 2>;
 using fsm1 = fsm<PROBLEM_SIZE / 3, fsm2>;
-using fsm0 = fsm<0, fsm1>;
+using StateMachine = fsm<0, fsm1>;
 
 int test() {
-  return run_fsm<fsm0>();
+  return run_fsm<StateMachine>();
 }
